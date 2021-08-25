@@ -85,6 +85,7 @@ class App extends Component {
               placeholder="title"
               onChange = {this.handleChange}
             />
+            <button type="submit">Update</button>
           </form>}
       </div>
     );
