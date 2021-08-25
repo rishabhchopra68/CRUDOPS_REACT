@@ -14,7 +14,7 @@ class ToDoList extends Component {
 
             <li key = {todo.id}>
                 {todo.title}
-                <button style={{marginLeft:"10px"}} onClick = {()=>this.props.onEdit(todo.id-1)}>Edit</button>
+                <button style={{marginLeft:"10px"}} onClick = {()=>this.props.onEdit(todo.id)}>Edit</button>
                 <button style={{marginLeft:"10px"}} onClick={()=>this.props.onDelete(todo.id)}>Done</button>
             </li>
                 </div>
@@ -23,11 +23,11 @@ class ToDoList extends Component {
         return (
             <div>
                 <h1>To-Do List</h1>
-                <Link to='/create' >
-                <button className = 'btn btn-primary'>
-                Add Task 
-                </button>
-                </Link>
+                
+                    <button className = 'btn btn-primary' onClick={()=>this.props.onAdd()}>
+                        Add Task 
+                    </button>
+                
                 <ul>
                     {showtodos}
                 </ul>

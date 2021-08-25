@@ -1,8 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
-import CreateToDo from './components/CreateToDo';
-import {Switch,Route} from 'react-router-dom';
 import Home from './components/Home';
 
 
@@ -14,7 +12,8 @@ class App extends Component {
     todos : [],
     currentToDo : {},
     currentID : -1 , 
-    editMode : false
+    editMode : false,
+    addMode : false
   }
  
 
@@ -28,21 +27,54 @@ class App extends Component {
       this.getToDos();
   }
   
-  handleEdit=(index)=>{
+  handleEdit=(id)=>{
+    let currentToDo = this.state.todos.filter((todo)=>todo.id===id)
+    
+    console.log(currentToDo);
     this.setState({
-      currentToDo:{...this.state.todos[index]},
-      currentID : index,
+      currentToDo: currentToDo,
+      currentID : id,
       editMode : true,
+      addMode : false,
     })
+  }
+
+  handleAdd=()=>{
+    
+    console.log("add handled");
+    let todos = [...this.state.todos];
+    let index = todos[todos.length-1].id+1;
     console.log(index);
+    
+    this.setState({
+      currentToDo : {userId:1,id:index,title:'new task',completed:false},
+      currentID : index,
+      addMode : true,
+      editMode : false
+    })
   }
   handleUpdate = () => {
-    let todos = this.state.todos;
-    todos[this.state.currentID] = {...this.state.currentToDo};
+    let todos = [...this.state.todos];
+    if(this.state.addMode===true){
+      console.log("addMode");
+      todos.push(this.state.currentToDo);
+    }
+    else{  // edit mode
+      console.log("Edit mode");
+      todos = todos.map(todo=>{
+        if(todo.id===this.state.currentID){
+          console.log(todo.id);
+          return {...this.state.currentToDo}
+        }else{
+          return todo;
+        }
+      })
+    }
     this.setState({
       currentID: -1,
       todos : todos,
       currentToDo : {},
+      addMode : false,
       editMode : false,
     })
     console.log("update handled");
@@ -58,35 +90,31 @@ class App extends Component {
         
     let todos = [...this.state.todos];
     todos = todos.filter((todo=>todo.id!=id))
-    this.setState({todos})
+    this.setState({todos,currentID:-1,currentToDo:{},editMode:false,addMode:false})
   }
 
   render(){
+
     return (
       <div>
-        <Switch>
-          <Route exact path = '/'>
-            <Home todos = {this.state.todos} onDelete={this.handleDelete}
-              onEdit = {this.handleEdit}
+        <Home todos = {this.state.todos} onDelete={this.handleDelete}
+              onEdit = {this.handleEdit} onAdd = {this.handleAdd}
             />
-          </Route>
-          <Route exact path="/create">
-            <CreateToDo onChange = {this.handleEdit}/>
-          </Route>
-        </Switch>
-        {this.state.editMode && 
+        {(this.state.editMode || this.state.addMode) && 
         
         <form onSubmit={this.handleUpdate}>
-            <h1>EDIT</h1>
+            <h1>EDIT/ADD</h1>
             <label>TITLE</label>
             <input
               name="title"
               value= {this.state.currentToDo['title']}
-              placeholder="title"
+              
               onChange = {this.handleChange}
+              required
             />
-            <button type="submit">Update</button>
-          </form>}
+            <button className="btn" type="submit">Update</button>
+          </form>
+          }
       </div>
     );
   }

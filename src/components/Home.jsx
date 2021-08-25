@@ -9,7 +9,7 @@ class Home extends Component{
         <h1 style = {{textAlign:"center"}}>CRUD operations</h1> 
         
         <ToDoList todos = {this.props.todos} onDelete = {this.props.onDelete}
-            onEdit = {this.props.onEdit}
+            onEdit = {this.props.onEdit} onAdd = {this.props.onAdd}
         /> 
     
     
